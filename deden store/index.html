@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasa Sunda</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Rasa Sunda</h1>
+        <nav>
+            <ul>
+                <li><button onclick="showCategory('baju')">Cemilan</button></li>
+                <li><button onclick="showCategory('celana')">Makanan</button></li>
+                <li><button onclick="showCategory('aksesoris')">Minuman</button></li>
+            </ul>
+            <input type="text" id="search" placeholder="Cari produk..." oninput="searchProduct()">
+        </nav>
+    </header>
+
+    <main>
+        <div class="hero-image">
+            <img src="https://assets-pergikuliner.com/vIs8r6M3HeeoLUKwLagNSQDudFU=/fit-in/1366x768/smart/filters:no_upscale()/https://assets-pergikuliner.com/uploads/bootsy/image/19177/rumah_makan_sunda_di_bandung.jpg" alt="Fashion Banner">
+        </div>
+
+        <section id="upload-section">
+            <select id="categorySelect">
+                <option value="baju">Cemilan</option>
+                <option value="celana">Makanan</option>
+                <option value="aksesoris">Minuman</option>
+            </select>
+            <input type="file" id="imageUpload" accept="image/*">
+        </section>
+
+        <section id="galleries">
+            <div id="baju" class="category-section"><h2>Cemilan</h2></div>
+            <div id="celana" class="category-section" style="display:none"><h2>Makanan</h2></div>
+            <div id="aksesoris" class="category-section" style="display:none"><h2>Minuman</h2></div>
+        </section>
+    </main>
+
+    <script>
+        const upload = document.getElementById("imageUpload");
+        const categorySelect = document.getElementById("categorySelect");
+
+        upload.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "img-wrapper";
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+
+                    const titleInput = document.createElement("input");
+                    titleInput.placeholder = "Nama Produk";
+
+                    const descInput = document.createElement("textarea");
+                    descInput.placeholder = "Deskripsi Produk";
+
+                    const delBtn = document.createElement("button");
+                    delBtn.textContent = "×";
+                    delBtn.onclick = () => wrapper.remove();
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(titleInput);
+                    wrapper.appendChild(descInput);
+                    wrapper.appendChild(delBtn);
+
+                    const selectedCategory = document.getElementById(categorySelect.value);
+                    selectedCategory.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function showCategory(category) {
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.style.display = "none";
+            });
+            document.getElementById(category).style.display = "block";
+        }
+
+        function searchProduct() {
+            const query = document.getElementById("search").value.toLowerCase();
+            document.querySelectorAll('.img-wrapper').forEach(wrapper => {
+                const title = wrapper.querySelector('input')?.value.toLowerCase() || '';
+                const desc = wrapper.querySelector('textarea')?.value.toLowerCase() || '';
+                if (title.includes(query) || desc.includes(query)) {
+                    wrapper.style.display = "block";
+                } else {
+                    wrapper.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
